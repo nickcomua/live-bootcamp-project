@@ -9,6 +9,9 @@ use axum::{
 };
 use tower_http::services::ServeDir;
 
+use crate::routes::{login, logout, signup, verify_2fa, verify_token};
+
+pub mod routes;
 
 // This struct encapsulates our application-related logic.
 pub struct Application {
@@ -45,22 +48,10 @@ impl Application {
     }
 }
 
-async fn signup() -> impl IntoResponse {
-    StatusCode::OK.into_response()
-}
 
-async fn login() -> impl IntoResponse {
-    StatusCode::OK.into_response()
-}
 
-async fn logout() -> impl IntoResponse {
-    StatusCode::OK.into_response()
-}
 
-async fn verify_2fa() -> impl IntoResponse {
-    StatusCode::OK.into_response()
-}
 
-async fn verify_token() -> impl IntoResponse {
-    StatusCode::OK.into_response()
-}
+
+
+
