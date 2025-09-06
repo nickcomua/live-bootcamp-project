@@ -1,4 +1,6 @@
-use std::error::Error;
+use std::{
+    error::Error,
+};
 
 use axum::{
     http::StatusCode,
@@ -9,9 +11,22 @@ use axum::{
 };
 use tower_http::services::ServeDir;
 
-use crate::routes::{login, logout, signup, verify_2fa, verify_token};
+use crate::{
+    app_state::UserStoreType, routes::{login, logout, signup, verify_2fa, verify_token}, services::HashmapUserStore
+};
 
+pub mod domain;
 pub mod routes;
+pub mod services;
+pub mod app_state;
+
+use app_state::AppState;
+
+impl AppState {
+    pub fn new(user_store: UserStoreType) -> Self {
+        Self { user_store }
+    }
+}
 
 // This struct encapsulates our application-related logic.
 pub struct Application {
@@ -22,7 +37,7 @@ pub struct Application {
 }
 
 impl Application {
-    pub async fn build(address: &str) -> Result<Self, Box<dyn Error>> {
+    pub async fn build(app_state: AppState, address: &str) -> Result<Self, Box<dyn Error>> {
         // Move the Router definition from `main.rs` to here.
         // Also, remove the `hello` route.
         // We don't need it at this point!
@@ -32,7 +47,8 @@ impl Application {
             .route("/login", post(login))
             .route("/verify-2fa", post(verify_2fa))
             .route("/verify-token", post(verify_token))
-            .route("/logout", post(logout));
+            .route("/logout", post(logout))
+            .with_state(app_state);
 
         let listener = tokio::net::TcpListener::bind(address).await?;
         let address = listener.local_addr()?.to_string();
@@ -47,11 +63,3 @@ impl Application {
         self.server.await
     }
 }
-
-
-
-
-
-
-
-
