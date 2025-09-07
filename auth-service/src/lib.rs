@@ -1,23 +1,13 @@
 use std::error::Error;
 
-use axum::{
-    http::StatusCode,
-    response::{Html, IntoResponse},
-    routing::{get, post},
-    serve::Serve,
-    Router,
-};
+use axum::{http::StatusCode, response::IntoResponse, routing::post, serve::Serve, Router};
 use tower_http::services::ServeDir;
 
 use crate::{
     app_state::UserStoreType,
     routes::{login, logout, signup, verify_2fa, verify_token},
-    services::HashmapUserStore,
 };
-use axum::{
-    response::Response,
-    Json,
-};
+use axum::{response::Response, Json};
 use domain::AuthAPIError;
 use serde::{Deserialize, Serialize};
 
