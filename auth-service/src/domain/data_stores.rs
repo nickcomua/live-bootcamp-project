@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use crate::domain::{Email, Password};
 
 use super::User;
@@ -11,12 +13,12 @@ pub trait UserStore: Send + Sync {
 }
 
 #[async_trait::async_trait]
-pub trait BannedTokenStore {
+pub trait BannedTokenStore: Send + Sync {
     async fn add_banned_token(&mut self, token: &str) -> Result<(), BannedTokenStoreError>;
     async fn check_banned_token(&self, token: &str) -> Result<bool, BannedTokenStoreError>;
 }
 
-#[derive(Debug,PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum BannedTokenStoreError {
     TokenAlreadyExists,
     UnexpectedError,

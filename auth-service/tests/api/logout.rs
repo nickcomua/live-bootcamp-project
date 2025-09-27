@@ -1,4 +1,4 @@
-use auth_service::{utils::constants::JWT_COOKIE_NAME};
+use auth_service::utils::constants::JWT_COOKIE_NAME;
 use reqwest::Url;
 
 use crate::helpers::{get_random_email, TestApp};
@@ -64,11 +64,20 @@ async fn should_return_200_if_valid_jwt_cookie() {
     let response = app.post_logout().await;
 
     assert_eq!(response.status().as_u16(), 200);
+
+    assert_eq!(
+        app.baned_store
+            .read()
+            .await
+            .check_banned_token(auth_cookie.value())
+            .await,
+        Ok(true)
+    );
 }
 
 #[tokio::test]
 async fn should_return_400_if_logout_called_twice_in_a_row() {
-        let app = TestApp::new().await;
+    let app = TestApp::new().await;
     let random_email = get_random_email();
 
     let signup_body = serde_json::json!({
