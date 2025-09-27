@@ -10,7 +10,7 @@ use axum::{
 use tower_http::{cors::CorsLayer, services::ServeDir};
 
 use crate::{
-    app_state::{BannedTokenStoreType, UserStoreType},
+    app_state::{BannedTokenStoreType, TwoFACodeStoreType, UserStoreType},
     routes::{login, logout, signup, verify_2fa, verify_token},
 };
 use domain::AuthAPIError;
@@ -25,8 +25,12 @@ pub mod utils;
 use app_state::AppState;
 
 impl AppState {
-    pub fn new(user_store: UserStoreType, ban_token_store: BannedTokenStoreType) -> Self {
-        Self { user_store, ban_token_store }
+    pub fn new(user_store: UserStoreType, banned_token_store: BannedTokenStoreType, two_fa_code_store: TwoFACodeStoreType) -> Self {
+        Self {
+            user_store,
+            banned_token_store,
+            two_fa_code_store
+        }
     }
 }
 

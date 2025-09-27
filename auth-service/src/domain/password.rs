@@ -27,14 +27,14 @@ impl AsRef<str> for Password {
 #[cfg(test)]
 impl Arbitrary for Password {
     fn arbitrary<G: quickcheck::Gen>(g: &mut G) -> Self {
-        use rand::{Rng, SeedableRng, seq::IndexedRandom};
+        use rand::{Rng, SeedableRng, seq::SliceRandom};
 
         const CHARSET: &[u8] = b"abcdefghijklmnopqrstuvwxyz\
                                  ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                                  0123456789\
                                  !@#$%^&*()-_=+[]{};:,.<>?/";
         let mut rng = rand::rngs::StdRng::seed_from_u64(g.next_u64());
-        let len = rng.random_range(8..=20);
+        let len = rng.gen_range(8..=20);
         let password: String = (0..len)
             .map(|_| *CHARSET.choose(&mut rng).unwrap() as char)
             .collect();
